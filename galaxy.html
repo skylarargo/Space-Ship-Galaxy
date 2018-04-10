@@ -1,0 +1,476 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   <title></title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script type="text/javascript" src="three.js"></script>
+    <script type="text/javascript" src="OBJLoader.js"></script>
+    <script type="text/javascript" src="MTLLoader.js"></script>
+    <script type="text/javascript" src="OBJMTLLoader.js"></script>
+</head>
+<body>
+    <h8>"[left]" = Drive Spaceship Left, "[right]" = Drive Spaceship Right, "[up]" = Drive Spaceship Up, "[down]" = Drive Spaceship Down, "[f]" = Drive Spaceship Forward, "[b]" = Drive Spaceship Backward</h8>
+    <h8>*** Spaceship can drive through planets (May take a moment to load)</h8>
+    <div id="keycode" style="position:absolute; left:20px; top:20px;"></div>
+    <div id="output"></div>
+    <script>
+
+
+
+
+        document.getElementById("legend")
+        document.addEventListener("keydown", onKeyDown, false);
+        window.addEventListener("resize", onResize, false);
+
+
+
+
+
+        var scene = new THREE.Scene();
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(new THREE.Color(0x000000));
+        document.getElementById("output").appendChild(renderer.domElement);
+        renderer.shadowMapEnabled = true;
+
+
+
+
+
+
+        var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 500);
+        camera.position.set(0, 0, 30);
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+        
+
+
+
+
+
+
+        var sunlight1 = new THREE.DirectionalLight(0xF2F5A9, 2.0);
+        sunlight1.position.set(0, 20, 10);
+        sunlight1.target.position.set(15, 5, 10);
+        
+        scene.add(sunlight1);
+        scene.add(sunlight1.target);
+    
+        var sunlight2 = new THREE.SpotLight(0xF7D358, 3.0);
+        sunlight2.position.set(0, 10, 15);
+        sunlight2.target.position.set(-15, 5, -10);
+        scene.add(sunlight2.target);
+        scene.add(sunlight2);
+
+        var sunlight3 = new THREE.AmbientLight(0x5858FA, .25);
+        sunlight3.position.set(0, 0, 20);
+        scene.add(sunlight3);
+    
+
+
+       
+
+        var sunmesh, mercurymesh, venusmesh, marsmesh, earthmesh, jupitermesh, saturnmesh, uranusmesh, plutomesh, neptunemesh, moonmesh;
+        var earthmoon = new THREE.Object3D();
+
+        var radius = .0006;
+
+        var loader = new THREE.OBJMTLLoader();
+        
+       
+        
+        loader.load('SUN.obj', 'SUN.mtl', function (object) {
+
+
+
+            object.scale.set(20, 20, 20);
+            sunmesh = object;
+
+            
+            sunmesh.position.set(-100, 30, -50);
+           
+
+            scene.add(sunmesh);
+
+
+
+        });
+
+        
+        loader.load('MERCURY.obj', 'MERCURY.mtl', function (object2) {
+
+
+
+            object2.scale.set(.4, .4, .4);
+            mercurymesh = object2;
+
+            mercurymesh.rotateX(0.6);
+            mercurymesh.position.set(-20, -15, -10);
+           
+
+            scene.add(mercurymesh);
+
+        });
+
+
+        
+        loader.load('VENUS.obj', 'VENUS.mtl', function (object3) {
+
+
+
+            object3.scale.set(.8, .8, .8);
+            venusmesh = object3;
+
+            venusmesh.rotateX(0.6);
+            venusmesh.position.set(-15, -13, -10);
+          
+
+            scene.add(venusmesh);
+
+
+
+        });
+
+        
+        loader.load('EARTH.obj', 'EARTH.mtl', function (object4) {
+
+            object4.scale.set(1, 1, 1);
+            earthmesh = object4;
+
+            earthmesh.rotateX(0);
+            
+            earthmesh.position.set(-8, -10, -10);
+          
+            scene.add(earthmesh);
+            
+        });
+
+        
+        loader.load('MOON.obj', 'MOON.mtl', function (object5) {
+
+
+
+            object5.scale.set(.2, .2, .2);
+            moonmesh = object5;
+
+            moonmesh.rotateX(0.6);
+            moonmesh.position.set(-5, -8, -10);
+         
+            earthmoon.add(moonmesh);
+
+
+
+        });
+
+        scene.add(earthmoon);
+        
+        loader.load('MARS.obj', 'MARS.mtl', function (object6) {
+
+
+
+            object6.scale.set(.35, .35, .35);
+            marsmesh = object6;
+
+            marsmesh.rotateX(0.6);
+            marsmesh.position.set(-1, -8, -10);
+          
+            scene.add(marsmesh);
+
+
+
+        });
+        
+        loader.load('JUPITER.obj', 'JUPITER.mtl', function (object7) {
+
+
+
+            object7.scale.set(2, 2, 2);
+            jupitermesh = object7;
+
+            
+            
+            jupitermesh.position.set(5, -4, -10);
+         
+            scene.add(jupitermesh);
+        });
+       
+
+        loader.load('SATURN.obj', 'SATURN.mtl', function (object8) {
+
+
+
+            object8.scale.set(1,1,1);
+            saturnmesh = object8;
+
+            //saturnmesh.rotateX(0);
+            saturnmesh.rotateZ(0.5);
+            saturnmesh.position.set(15, 0, -10);
+       
+            scene.add(saturnmesh);
+        });
+        
+        
+        loader.load('URANUS.obj', 'URANUS.mtl', function (object9) {
+
+
+
+            object9.scale.set(0.7, 0.7, 0.7);
+            uranusmesh = object9;
+
+            uranusmesh.rotateX(0.4);
+            uranusmesh.position.set(21, 3, -10);
+         
+
+            scene.add(uranusmesh);
+        });
+
+       
+        loader.load('NEPTUNE.obj', 'NEPTUNE.mtl', function (object10) {
+
+
+
+            object10.scale.set(0.6, 0.6, 0.6);
+            neptunemesh = object10;
+
+            neptunemesh.rotateX(0.6);
+            neptunemesh.position.set(25, 6, -10);
+           
+
+            scene.add(neptunemesh);
+        });
+        
+        loader.load('PLUTO.obj', 'PLUTO.mtl', function (object11) {
+
+
+
+            object11.scale.set(0.4, 0.4, 0.4);
+            plutomesh = object11;
+
+            plutomesh.rotateX(0.6);
+            plutomesh.position.set(29, 9, -10);
+          
+
+            scene.add(plutomesh);
+        });
+        
+
+
+        //background
+        var texture = THREE.ImageUtils.loadTexture( 'galaxy.jpg' );
+        var backgroundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(2, 2, 0),
+            new THREE.MeshBasicMaterial({
+                map: texture
+            }));
+
+        backgroundMesh.material.depthTest = false;
+        backgroundMesh.material.depthWrite = false;
+
+        // Create your background scene
+        var backgroundScene = new THREE.Scene();
+        var backgroundCamera = new THREE.Camera();
+        backgroundScene.add(backgroundCamera);
+        backgroundScene.add(backgroundMesh);
+
+        
+
+
+
+
+
+        //spaceship
+        var base = new THREE.Mesh(new THREE.CylinderGeometry(2, 5, 1.5), new THREE.MeshPhongMaterial({
+            color: 0xFE642E, side: THREE.DoubleSide
+        }));
+        base.position.set(0, 0.5, 0);
+        base.scale.set(2, 2, 2);
+        //scene.add(base);
+        
+        var bottom = new THREE.Mesh(new THREE.CylinderGeometry(1, 5, 1), new THREE.MeshPhongMaterial({ color: 0xFE642E, side: THREE.DoubleSide }));
+        bottom.position.set(0, -2, 0);
+        bottom.scale.set(2, 2, 2);
+        bottom.rotateZ(Math.PI * 3);
+        //scene.add(bottom);
+
+        var windshield = new THREE.Mesh(new THREE.SphereGeometry(3.75,.02, .02), new THREE.MeshPhongMaterial({color: 0xcccccc, transparent: true, opacity: 0.2, side: THREE.DoubleSide}))
+        windshield.position.set(0, 1.5, 0);
+        //scene.add(windshield);
+
+        var light1 = new THREE.Mesh(new THREE.CircleGeometry(0.5,10), new THREE.MeshPhongMaterial({ color: 0xF7D358 }));
+        light1.position.set(-3.5, 0, 7);
+        light1.rotateX(-1.107);
+
+        var light2 = new THREE.Mesh(new THREE.CircleGeometry(0.5, 10), new THREE.MeshPhongMaterial({ color: 0xf7d358, side: THREE.DoubleSide}));
+        light2.position.set(3.5, -0.5, -7.8);
+        light2.rotateX(1);
+
+        var light3 = new THREE.Mesh(new THREE.CircleGeometry(0.5, 10), new THREE.MeshPhongMaterial({ color: 0xf7d358, side: THREE.DoubleSide }));
+        light3.position.set(7.5, -0.2, 3);
+        light3.rotateZ(180);
+        light3.rotateY(190);
+        
+        var light4 = new THREE.Mesh(new THREE.CircleGeometry(0.5, 10), new THREE.MeshPhongMaterial({ color: 0xf7d358, side: THREE.DoubleSide }));
+        light4.position.set(-7.7, -0.2, -2.7);
+        light4.rotateZ(2);
+        light4.rotateX(2);
+        light4.rotateY(1.6);
+        
+
+        var spaceship = new THREE.Object3D();
+        spaceship.add(base);
+        spaceship.add(bottom);
+        spaceship.add(windshield);
+        spaceship.add(light1);
+        spaceship.add(light2);
+        spaceship.add(light3);
+        spaceship.add(light4);
+
+        spaceship.position.set(0, 0, 25);
+        spaceship.scale.set(0.1, 0.1, 0.1);
+        
+        scene.add(spaceship);
+        spaceship.rotateY(1);
+
+        
+        
+
+        render();
+
+
+
+
+
+        function render()
+        {
+            spaceship.rotateY(0.06);
+
+            if (!(spaceship.position.x <= 0 && spaceship.position.y >= 0 && spaceship.position.z <= -10))
+     
+                if (sunmesh) {
+                    sunmesh.rotateY(0.0006);
+                }
+
+                if (mercurymesh) {
+                    mercurymesh.rotateY(0.00006);
+                }
+
+                if (venusmesh) {
+                    venusmesh.rotateY(0.0000000007);
+                }
+
+                if (earthmesh) {
+                    earthmesh.rotateY(0.005);
+                }
+
+                if (earthmoon) {
+                    radius += 0.006;
+                    earthmoon.rotateOnAxis(new THREE.Vector3(0, 0, 0), radius);
+                   
+                }
+                if (marsmesh) {
+                    marsmesh.rotateY(0.0047);
+                }
+
+                if (jupitermesh) {
+
+                    jupitermesh.rotateY(0.002);
+                }
+
+                if (saturnmesh) {
+                    saturnmesh.rotateY(0.003);
+                }
+
+                if (uranusmesh) {
+                    uranusmesh.rotateY(0.0000000007);
+                }
+
+                if (neptunemesh) {
+                    neptunemesh.rotateY(0.0045)
+                }
+
+                if (plutomesh) {
+                    plutomesh.rotateY(0.0000007);
+                }
+
+         
+
+            
+           
+
+            
+            renderer.autoClear = false;
+            renderer.clear();
+            renderer.render(backgroundScene, backgroundCamera);
+            renderer.render(scene, camera);
+            window.requestAnimationFrame(render);
+        }
+
+
+
+
+
+        function onResize() 
+        {
+            camera.aspect = window.innderWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+
+
+
+
+        function onKeyDown(event) {
+            var keyCode = event.which;
+            switch (keyCode) {
+                //case for right button
+                case 39:
+                    {
+                        spaceship.position.x += .1;
+                        break;
+                    }
+
+                    //case for left button
+                case 37:
+                    {
+                        spaceship.position.x -= 0.1;
+                        break;
+                    }
+
+                    //case for up button
+                case 38:
+                    {
+                        spaceship.position.y += 0.1;
+                        break;
+                    }
+
+                    //case for down button
+                case 40:
+                    {
+                        spaceship.position.y -= 0.1;
+                        break;
+                    }
+
+                    //case for 'b' (back) button 
+                case 66:
+                    {
+                        spaceship.position.z -= 0.1;
+                        break;
+                    }
+
+                    //case for 'f' (forward) button
+                case 70:
+                    {
+                        spaceship.position.z += 0.1;
+                        break;
+                    }
+            }
+        }
+        </script>
+
+</body>
+</html>
